@@ -1,14 +1,22 @@
 import React from "react";
-
 import Button from "../Button";
-
 import styles from "./ToastPlayground.module.css";
+import ToastShelf from "../ToastShelf";
+import { ToastContext } from '../ToastProvider'
 
 const VARIANT_OPTIONS = ["notice", "warning", "success", "error"];
 
 function ToastPlayground() {
+  const { createToast } = React.useContext(ToastContext)
   const [textAreaValue, setTextAreaValue] = React.useState("");
-  const [radioValue, setRadioValue] = React.useState('notice');
+  const [radioValue, setRadioValue] = React.useState("notice");
+
+  const handleOnSubmit = (event) => {
+    event.preventDefault();
+    createToast(radioValue, textAreaValue);
+    setRadioValue("notice");
+    setTextAreaValue("");
+  };
 
   return (
     <div className={styles.wrapper}>
@@ -16,8 +24,8 @@ function ToastPlayground() {
         <img alt="Cute toast mascot" src="/toast.png" />
         <h1>Toast Playground</h1>
       </header>
-
-      <div className={styles.controlsWrapper}>
+      <ToastShelf />
+      <form className={styles.controlsWrapper} onSubmit={handleOnSubmit}>
         <div className={styles.row}>
           <label
             htmlFor="message"
@@ -58,10 +66,10 @@ function ToastPlayground() {
         <div className={styles.row}>
           <div className={styles.label} />
           <div className={`${styles.inputWrapper} ${styles.radioWrapper}`}>
-            <Button>Pop Toast!</Button>
+            <Button type="submit">Pop Toast!</Button>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 }
